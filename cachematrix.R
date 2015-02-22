@@ -3,12 +3,18 @@
 ## leveraged in order to save processing time if calculated result is stored in
 ## the cache.
 
-## This function returns the a 2x2 matrix that contains 4 functions for
+## This function takes an invertible matrix and returns a 2x2 matrix
+## that contains 4 functions for
 ## 1. storing given invertible matrix in cache (using assignment operator '<<-')
 ## 2. getting invertible matrix from cache
 ## 3. storing given inverse of an invertible matrix
 ## 4. getting inverse of an invertible matrix from cache
 makeCacheMatrix <- function(x = matrix()) {
+        ## Check to see if the given matrix is invertible
+        if (ncol(x) != nrow(x)) {
+                message("Error: The given matrix is NOT invertible. Aborted.")
+                return(NULL)
+        }
         inversex <- NULL
         set <- function(y) {
                 x <<- y
@@ -24,10 +30,17 @@ makeCacheMatrix <- function(x = matrix()) {
                nrow=2, ncol=2)
 }
 
-## This function returns the inverse of given matrix x by either doing 
-## the calculation by itself or retrieving the cached calculated result from
-## function makeCacheMatrix().
+## This function takes the matrix that is returned by function makeCacheMatrix.
+## It returns the inverse of an invertible matrix by either:
+## - doing the calculation by itself, or
+## - retrieving the cached calculated result (from function makeCacheMatrix),
+## by calling method getinverse, the 4th element of the given matrix.
 cacheSolve <- function(x, ...) {
+        ## Check to see if the given matrix is null and abort if that's the case
+        if (is.null(x)) {
+                message("Error: The given matrix is null. Aborted.")
+                return(NULL)
+        }
         ## Retrieve cached inverse of x
         inversex <- x[[4]]()
         ## Check to see cached inverse of x is not null
